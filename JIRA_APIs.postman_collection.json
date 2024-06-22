@@ -1,0 +1,227 @@
+{
+	"info": {
+		"_postman_id": "a015c9ec-d2e2-4ea6-8539-243e9ade51ae",
+		"name": "JIRA APIs",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "301708"
+	},
+	"item": [
+		{
+			"name": "Get",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"    ",
+							"});",
+							"",
+							"var projectId = pm.response.json().id;",
+							"pm.environment.set(\"projectId\",projectId);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://restapibymukesh.atlassian.net/rest/api/latest/project/KAN",
+					"protocol": "https",
+					"host": [
+						"restapibymukesh",
+						"atlassian",
+						"net"
+					],
+					"path": [
+						"rest",
+						"api",
+						"latest",
+						"project",
+						"KAN"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Specific ID",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"    ",
+							"});",
+							"",
+							"",
+							"var total = pm.response.json().total;",
+							"pm.test(\"Verify total is not null\",function(){",
+							"pm.expect(total).not.null;",
+							"});",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://restapibymukesh.atlassian.net/rest/api/3/search",
+					"protocol": "https",
+					"host": [
+						"restapibymukesh",
+						"atlassian",
+						"net"
+					],
+					"path": [
+						"rest",
+						"api",
+						"3",
+						"search"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add Issue",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.test(\"Generate dynamic emailid\", function(){",
+							"var uniqueId = new Date().getTime() + Math.floor(Math.random() * 1000);",
+							"  pm.environment.set(\"uniqueId\",uniqueId);",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"    ",
+							"});",
+							"",
+							"var issueId = pm.response.json().id;",
+							"pm.environment.set(\"issueId\",issueId);",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"fields\": {\n        \"project\": {\n            \"id\": \"{{projectId}}\"\n        },\n        \"summary\": \"Sample Issue Details\",\n        \"issuetype\": {\n            \"id\": \"10002\"\n        }\n    }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://restapibymukesh.atlassian.net/rest/api/3/issue",
+					"protocol": "https",
+					"host": [
+						"restapibymukesh",
+						"atlassian",
+						"net"
+					],
+					"path": [
+						"rest",
+						"api",
+						"3",
+						"issue"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Issue",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 204\", function () {",
+							"    pm.response.to.have.status(204);",
+							"    ",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{baseurl}}/3/issue/{{issueId}}",
+					"host": [
+						"{{baseurl}}"
+					],
+					"path": [
+						"3",
+						"issue",
+						"{{issueId}}"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "basic",
+		"basic": [
+			{
+				"key": "username",
+				"value": "{{username}}",
+				"type": "string"
+			},
+			{
+				"key": "password",
+				"value": "{{password}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}
